@@ -1,0 +1,66 @@
+# Демо-стенд: PostgreSQL с синтетическими данными + приложение.
+#
+#   docker compose -f demo/docker-compose.yml up --build
+#   http://localhost:3838   (логин demo / demo)
+#
+# При первом старте Postgres применяет demo/schema.sql, затем контейнер seed
+# наполняет базу (demo/seed_demo.R), после чего поднимается приложение.
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: demo
+      POSTGRES_DB: erp_demo
+      TZ: UTC
+      PGTZ: UTC
+    volumes:
+      - ./schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d erp_demo"]
+      interval: 5s
+      retries: 20
+
+  seed:
+    build:
+      context: ..
+      dockerfile: demo/Dockerfile
+    command: ["Rscript", "-e", "source('demo/seed_demo.R', encoding = 'UTF-8')"]
+    environment: &env
+      ERP_REPORTS_DEMO: "true"
+      REPORTS_ERP_PG_HOST: db
+      REPORTS_ERP_PG_PORT: "5432"
+      REPORTS_ERP_PG_USER: postgres
+      REPORTS_ERP_PG_PASSWORD: demo
+      REPORTS_ERP_PG_DB: erp_demo
+      REPORTS_LOADBOARD_PG_HOST: db
+      REPORTS_LOADBOARD_PG_PORT: "5432"
+      REPORTS_LOADBOARD_PG_USER: postgres
+      REPORTS_LOADBOARD_PG_PASSWORD: demo
+      REPORTS_LOADBOARD_PG_DB: erp_demo
+      REPORTS_PRIVATE_AUTH_PG_HOST: db
+      REPORTS_PRIVATE_AUTH_PG_PORT: "5432"
+      REPORTS_PRIVATE_AUTH_PG_USER: postgres
+      REPORTS_PRIVATE_AUTH_PG_PASSWORD: demo
+      REPORTS_PRIVATE_AUTH_PG_DB: erp_demo
+      REPORTS_PROFILES_PG_HOST: db
+      REPORTS_PROFILES_PG_PORT: "5432"
+      REPORTS_PROFILES_PG_USER: postgres
+      REPORTS_PROFILES_PG_PASSWORD: demo
+      REPORTS_PROFILES_PG_DB: erp_demo
+      REPORTS_ELASTIC_URL: http://elastic-stub
+    depends_on:
+      db:
+        condition: service_healthy
+
+  app:
+    build:
+      context: ..
+      dockerfile: demo/Dockerfile
+    command: ["Rscript", "-e", "shiny::runApp('.', host = '0.0.0.0', port = 3838)"]
+    environment: *env
+    ports:
+      - "127.0.0.1:3838:3838"
+    depends_on:
+      seed:
+        condition: service_completed_successfully

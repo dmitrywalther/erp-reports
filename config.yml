@@ -1,0 +1,27 @@
+default:
+  db_erp:
+    host: !expr Sys.getenv("REPORTS_ERP_PG_HOST")
+    port: !expr Sys.getenv("REPORTS_ERP_PG_PORT")
+    user: !expr Sys.getenv("REPORTS_ERP_PG_USER")
+    password: !expr Sys.getenv("REPORTS_ERP_PG_PASSWORD")
+    dbname: !expr Sys.getenv("REPORTS_ERP_PG_DB")
+  db_tenders:
+    host: !expr Sys.getenv("REPORTS_LOADBOARD_PG_HOST")
+    port: !expr Sys.getenv("REPORTS_LOADBOARD_PG_PORT")
+    user: !expr Sys.getenv("REPORTS_LOADBOARD_PG_USER")
+    password: !expr Sys.getenv("REPORTS_LOADBOARD_PG_PASSWORD")
+    dbname: !expr Sys.getenv("REPORTS_LOADBOARD_PG_DB")
+  db_auth:
+    host: !expr Sys.getenv("REPORTS_PRIVATE_AUTH_PG_HOST")
+    port: !expr Sys.getenv("REPORTS_PRIVATE_AUTH_PG_PORT")
+    user: !expr Sys.getenv("REPORTS_PRIVATE_AUTH_PG_USER")
+    password: !expr Sys.getenv("REPORTS_PRIVATE_AUTH_PG_PASSWORD")
+    dbname: !expr Sys.getenv("REPORTS_PRIVATE_AUTH_PG_DB")
+  db_profiles:
+    host: !expr Sys.getenv("REPORTS_PROFILES_PG_HOST")
+    port: !expr Sys.getenv("REPORTS_PROFILES_PG_PORT")
+    user: !expr Sys.getenv("REPORTS_PROFILES_PG_USER")
+    password: !expr Sys.getenv("REPORTS_PROFILES_PG_PASSWORD")
+    dbname: !expr Sys.getenv("REPORTS_PROFILES_PG_DB")
+  db_elastic:
+    url: !expr Sys.getenv("REPORTS_ELASTIC_URL")

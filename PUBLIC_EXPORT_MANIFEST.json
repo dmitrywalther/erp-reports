@@ -1,0 +1,386 @@
+{
+  "format": "erp-reports-public/v1",
+  "generated_at_utc": "2026-11-01T17:42:20.9215259Z",
+  "files": [
+    {
+      "path": ".dockerignore",
+      "bytes": 213,
+      "sha256": "e884b8de8fa4e2b41a6d0878eb485ff9fa062458eb466e8ed0ea39a32ad21e78"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 105,
+      "sha256": "680fa1b2d3afb53a3f5a1fcf2fa3a5d153c0dfd2bbfb6fd0ea15e4442f8f0392"
+    },
+    {
+      "path": "config.yml",
+      "bytes": 1281,
+      "sha256": "bb696c9ab8783e05e13e9ee1c6506d4e6e66e9e0025a234d19ca08ded74286d8"
+    },
+    {
+      "path": "demo/check_public.ps1",
+      "bytes": 6489,
+      "sha256": "c722e084c3c796b70ca01fd0d94499c5c02cfa582278ee2dcbcfb91858e0a177"
+    },
+    {
+      "path": "demo/docker-compose.yml",
+      "bytes": 2210,
+      "sha256": "c393a2497b1ef7c0d5c16f91608434ec9444c3fed79ef6c8b0ba9473729c06ad"
+    },
+    {
+      "path": "demo/Dockerfile",
+      "bytes": 702,
+      "sha256": "89336d300ec91e6016924cb0e5be465e252602f04f3bc64ab58fbd4a72d6152b"
+    },
+    {
+      "path": "demo/elastic_stub.R",
+      "bytes": 1989,
+      "sha256": "623c296e69d16c950e4be3d33af819e603431ed433a847da4eb260ef2e053c4a"
+    },
+    {
+      "path": "demo/export_public.ps1",
+      "bytes": 7987,
+      "sha256": "b0524c0a9413b23da9341189cad65d813c42489959699cb325bd5292ef521c90"
+    },
+    {
+      "path": "demo/install_packages.R",
+      "bytes": 2153,
+      "sha256": "018d864a13ac5c6c259a86aa478033c648f2e27614f47e4b72e8c346f14d845d"
+    },
+    {
+      "path": "demo/public_files.txt",
+      "bytes": 1648,
+      "sha256": "3dc15691ac9ec0bee128aca5cbcc1770d877a4b667c57237acef1548f4f0729b"
+    },
+    {
+      "path": "demo/public_support.R",
+      "bytes": 3765,
+      "sha256": "ce54a3ad305f9264a00a44b7f4b944cbc1c7e676b5d89db09c3bf451eac950b2"
+    },
+    {
+      "path": "demo/run_demo.ps1",
+      "bytes": 4151,
+      "sha256": "64f095370201785c2cb13abcb8782c84e2861c06bd7cffd6013b91d1eb425354"
+    },
+    {
+      "path": "demo/schema.sql",
+      "bytes": 17776,
+      "sha256": "9f129b6b1c289c072ca5c9ac02a19b039655bfe69c090845d3eec3b281674f05"
+    },
+    {
+      "path": "demo/seed_demo.R",
+      "bytes": 47631,
+      "sha256": "20b8729b65a6c0858917a0eedc644e9b6d6a783dfbecbaa432c81686e233a05f"
+    },
+    {
+      "path": "demo/test_calendar.R",
+      "bytes": 3595,
+      "sha256": "4a7e01c3225a2590ad2474c216385e63fb1c71800f3ecda06690235687bb03be"
+    },
+    {
+      "path": "demo/test_doublets.R",
+      "bytes": 3290,
+      "sha256": "4c975607c034fcbec43f5c6589ad06e9148eecb9682eb39b369546fb183d21c8"
+    },
+    {
+      "path": "demo/test_helpers.ps1",
+      "bytes": 1166,
+      "sha256": "d235575c19d2950bee1d7ba00dc0887ea4d857e98c4543a0785451d419d1a186"
+    },
+    {
+      "path": "demo/test_helpers.R",
+      "bytes": 9384,
+      "sha256": "09f61c7eb102fb4934197c94f817508462dadd4d2e3bd5faba039105bfe86cbf"
+    },
+    {
+      "path": "demo/test_kpi.R",
+      "bytes": 7143,
+      "sha256": "0ea5a140e70db9fffdad8b466195438abf48dafe558a9c3af02d6dbf263d1550"
+    },
+    {
+      "path": "demo/test_public_config.R",
+      "bytes": 3915,
+      "sha256": "9c7be258b324eb0c5be8434fe6a37f15ef111ec4b01c68417789d931f75bb727"
+    },
+    {
+      "path": "demo/test_public_support.R",
+      "bytes": 5820,
+      "sha256": "47132cd254fcebebcc47aff43e6632749fbb424882a7077ef86136ab97a0d92d"
+    },
+    {
+      "path": "demo/test_report_ratios.R",
+      "bytes": 899,
+      "sha256": "190ebc7e76e58d9bc5accd98539a683dc47ba5f45bbb7e6da8703c20700a371c"
+    },
+    {
+      "path": "demo/test_reports.ps1",
+      "bytes": 1153,
+      "sha256": "2e5a45dd9d676a7744fbfcbacd1b47bd270e8c5ca35b3dfb14ba69848209faf8"
+    },
+    {
+      "path": "demo/test_seed_lifecycle.R",
+      "bytes": 4076,
+      "sha256": "2bfb35434f664afb0daf35aefd1749c5a4142e7068bcb792560d4d97f36f5583"
+    },
+    {
+      "path": "demo/test_spot.R",
+      "bytes": 5410,
+      "sha256": "9722d1998fd23dc6b5cfd50d93db714a73d56f2b68dde5eb06d1e3cdffc8d3b8"
+    },
+    {
+      "path": "demo/test_unformed_bills.R",
+      "bytes": 3472,
+      "sha256": "52b23938847deef75421abcce351b65165bbf4f43f886e7beb3be7ea52e817f5"
+    },
+    {
+      "path": "docs/PUBLICATION.md",
+      "bytes": 7243,
+      "sha256": "264d7ef0ea89a9275e41259e17b3737a02702658d910f3e9b640dacc85b0640e"
+    },
+    {
+      "path": "docs/screenshots/logistics-kpi.jpg",
+      "bytes": 108916,
+      "sha256": "c35ca223e705e705732f861fb72a863e5aa4a4fb35f643d7bacea10febb269a3"
+    },
+    {
+      "path": "docs/screenshots/payables.jpg",
+      "bytes": 115071,
+      "sha256": "27b45e08b2b7898b4a9a1b0fc15c1d8a27fa96cede1216e8e0957326ab8ee6b9"
+    },
+    {
+      "path": "docs/screenshots/price-indicative.jpg",
+      "bytes": 123606,
+      "sha256": "df62bece1e57028d70766a6282edad7e28b0be34f85346f542b9dfaa8670d655"
+    },
+    {
+      "path": "docs/screenshots/receivables.jpg",
+      "bytes": 134267,
+      "sha256": "27de72d5bd088d6660b66db2ac522c6a8f7b6cc25d6cfc762819c0b97f2bd23b"
+    },
+    {
+      "path": "docs/screenshots/revenue-profit.jpg",
+      "bytes": 102222,
+      "sha256": "384d0c8e0bf80e8dd2f5d6c22ff24b4cc617ada8bf9850f8cbf165601809fc6c"
+    },
+    {
+      "path": "docs/screenshots/round-trips.jpg",
+      "bytes": 120512,
+      "sha256": "afb1853485b36fcb9f09689b5bfbde863afa0760ef8bce32ead38e65cd2f1dca"
+    },
+    {
+      "path": "docs/screenshots/security.jpg",
+      "bytes": 63753,
+      "sha256": "bcc1b47fe343cf824d4b44290beded3c72b3da8dbe50f5e9e87ff79c0df618db"
+    },
+    {
+      "path": "docs/screenshots/spot.jpg",
+      "bytes": 97065,
+      "sha256": "7d0af75bfd1de8a760aedb4ce94ea3515d2974b7552062582ad4627164eb6a0f"
+    },
+    {
+      "path": "global.R",
+      "bytes": 2335,
+      "sha256": "5a5c38c30e2ed7d7987a3b47e793e184b68fd233dfc11a8237aef6d1e9b03352"
+    },
+    {
+      "path": "helpers.R",
+      "bytes": 402765,
+      "sha256": "853545edbab0dc5cb6f0052fa41612801473d0ceb9bd206135363170bdb828f8"
+    },
+    {
+      "path": "production_calendar.R",
+      "bytes": 16781,
+      "sha256": "db44efa31fef2d139e718a79f52c0f07b2173a321c02b73be887b2553a5dc8f3"
+    },
+    {
+      "path": "README.md",
+      "bytes": 14363,
+      "sha256": "fb8a5c74b510225ea7d53a8721a0ed9ee9e63ba53312b2499face231ad10c373"
+    },
+    {
+      "path": "report_utils.R",
+      "bytes": 317,
+      "sha256": "cedd9bc037b90d6f0faa514816c433349d845a1a0df04424927794b2f087df66"
+    },
+    {
+      "path": "server.R",
+      "bytes": 664809,
+      "sha256": "21d7eebeba3dd2f0c1517175fe0c6cbdaf065baf46b24bec9abb75cbd19307b5"
+    },
+    {
+      "path": "ui.R",
+      "bytes": 4292,
+      "sha256": "a949ec2a4120b9326acdc47c4caff4c814e0d1c5e3fb142f06b3622626952088"
+    },
+    {
+      "path": "ui/active_requests_ui.R",
+      "bytes": 400,
+      "sha256": "41bcac0559c312e3de22245a5b560accf92144984a35c2d0eb669240cdc96b34"
+    },
+    {
+      "path": "ui/averageTime_ui.R",
+      "bytes": 2507,
+      "sha256": "561f6f9cd8a44cf45163fc18dc69184f6fcde71ac5370c910fefae6020824fc0"
+    },
+    {
+      "path": "ui/canceledOrders_proportion_ui.R",
+      "bytes": 3191,
+      "sha256": "3f21039f707189f9385e0eaab9583860abe6b4261d20680e36d07ee2296ba2b5"
+    },
+    {
+      "path": "ui/canceledOrders_ui.R",
+      "bytes": 2384,
+      "sha256": "4966a09bef628516abb41933f183b318955823840d74303dcf10a21b67e99150"
+    },
+    {
+      "path": "ui/carrier_prepayment_ui.R",
+      "bytes": 3790,
+      "sha256": "ebeb65fa72fc8bc793fb087c794159d95b8079d1438c5af0666cfcd2c1d2f4f1"
+    },
+    {
+      "path": "ui/carriers_ui.R",
+      "bytes": 3500,
+      "sha256": "bf5677f038ffd9dae3654e655686d4834ac9d8f2b2875d0ab7cf9f21ec46b51e"
+    },
+    {
+      "path": "ui/cash_ui.R",
+      "bytes": 517,
+      "sha256": "cea851f8ea3d0948b20ab76a3f5a8e4a92d4cffbb90f093b3d705729283668ab"
+    },
+    {
+      "path": "ui/client_health_ui.R",
+      "bytes": 10941,
+      "sha256": "e7b0029e199940772f6c787ff015d54b484a29b3a6675ea2f9bbf6fc6c164242"
+    },
+    {
+      "path": "ui/count_requests_ui.R",
+      "bytes": 1451,
+      "sha256": "ae62ecb3302161195ffe86b424f4d3f744c7f19fa14b2621b6cbad4f6d534afd"
+    },
+    {
+      "path": "ui/DO_ui.R",
+      "bytes": 1794,
+      "sha256": "1fb6700129113f4e4f2dcbda9e45d7f83b39f214b5d2aece2ab5e896f984c45a"
+    },
+    {
+      "path": "ui/drivers_carriers_vehicles_ui.R",
+      "bytes": 1039,
+      "sha256": "2c96f19c521e6898019e1ecfa418a17f1ed9883646cb278bdde29a008cb7107a"
+    },
+    {
+      "path": "ui/DZ_dashboard_ui.R",
+      "bytes": 1526,
+      "sha256": "158497134cfcb65e2ab0dfa3c9e70c1a6d4968228138e2f38bb31a4dd23fc296"
+    },
+    {
+      "path": "ui/DZ_new_ui.R",
+      "bytes": 3183,
+      "sha256": "a1a91b0897e267797536b26667f058305bf4173d657a86c8594ef9296d408446"
+    },
+    {
+      "path": "ui/DZ_ui.R",
+      "bytes": 2075,
+      "sha256": "e6ff80a28769baf40238d9ca3376a4d27cdd7766c2d5370766e8a35ae523241e"
+    },
+    {
+      "path": "ui/factoring_ui.R",
+      "bytes": 1055,
+      "sha256": "aadfa00ef9d4139b77b07d2ac374bbc195d9245eda36ec8acbf44d7931dc9ef6"
+    },
+    {
+      "path": "ui/KZ_ui.R",
+      "bytes": 1540,
+      "sha256": "b0d1b6b3772967b740270e8db3baa85e2c230f0bc1565f9149f2a782d2399bff"
+    },
+    {
+      "path": "ui/logistic_KPI_ui.R",
+      "bytes": 5644,
+      "sha256": "53389717ca02698fa803485306bf801118badf839bc1c29ea41e8e0c7ea6ea1c"
+    },
+    {
+      "path": "ui/logistician_plan_fact_ui.R",
+      "bytes": 1742,
+      "sha256": "c65788f400683a702b5af45d13ba336a3e8f90a60912abbb8054c4913cb8538f"
+    },
+    {
+      "path": "ui/logisticMetrics_ui.R",
+      "bytes": 3326,
+      "sha256": "5df4de11eb3e00c4c30d5fec3c6748d6ecbbc5055db3b893b9a99f6e6526638f"
+    },
+    {
+      "path": "ui/low_profitability_ui.R",
+      "bytes": 3356,
+      "sha256": "455d8336d26efbf7cc245ec4cf4aa95f96db67a98a0e1acfc26e1c954ff3f609"
+    },
+    {
+      "path": "ui/manager_plan_fact_ui.R",
+      "bytes": 2331,
+      "sha256": "9b222b9992f08f8fe59d4c4a139cff31477a1fef6c87ac9bcf6ab11c90905c6b"
+    },
+    {
+      "path": "ui/missingDocs_ui.R",
+      "bytes": 1284,
+      "sha256": "b1ae3537003923750ae1093cc77a2d428ec8840f344c7537ae6a0da1d94c8f1e"
+    },
+    {
+      "path": "ui/potentialDoublets_ui.R",
+      "bytes": 3873,
+      "sha256": "1ddfb7a0e5ad91aa47bab6d6247f035d3b44e41ba35668cdfcfaf3782c7c2f59"
+    },
+    {
+      "path": "ui/priceIndicative_ui.R",
+      "bytes": 3858,
+      "sha256": "eb49c492d1c0b622b5b896c933c1c1deb83ada1432c7a6fcb13624468f86e388"
+    },
+    {
+      "path": "ui/problemDocs_ui.R",
+      "bytes": 1100,
+      "sha256": "0bd2eb53c45c2ceb7ab9b030dbb76d3153785b4caa9b160ccbdc1bcfc4f78d4f"
+    },
+    {
+      "path": "ui/registersForInsurance_ui.R",
+      "bytes": 1485,
+      "sha256": "3b3477b25e8a12466cccb2e37b383673a8ad57e6ee2e50b967f844badb5a0ace"
+    },
+    {
+      "path": "ui/requests_ui.R",
+      "bytes": 1988,
+      "sha256": "df3691132dcf54fb474a2dbab239bfb50910beb33fb7e3192c02a47bd044ace3"
+    },
+    {
+      "path": "ui/revenue_profit_ui.R",
+      "bytes": 6829,
+      "sha256": "e1d4c3a627453c5c5aa10c26d18118be9ee93fc2a0b98535995ba6af82aad23d"
+    },
+    {
+      "path": "ui/security_status_ui.R",
+      "bytes": 2034,
+      "sha256": "98bbdc25d79acb52b8738a86e0fd46f0f6928c66f45d06f1adc44cca260a35af"
+    },
+    {
+      "path": "ui/security_ui.R",
+      "bytes": 3198,
+      "sha256": "0a16af7076ecfc8c6eb8ba62f1fe38599019b22fc889aad73e694faa4ef7e937"
+    },
+    {
+      "path": "ui/specialDC_ui.R",
+      "bytes": 1685,
+      "sha256": "7639046c154502abb8abc0eac1664213c4f51647dc4b0116769e4b25cb6aeac5"
+    },
+    {
+      "path": "ui/spot_ui.R",
+      "bytes": 1890,
+      "sha256": "ad041e3412aea688c17b564b2a8af60f5d97f3b8a750681da1fb84283b9b15c6"
+    },
+    {
+      "path": "version",
+      "bytes": 9,
+      "sha256": "58700d23aa1cc25990ee3602c83739161a653358505731b756090311a28f7d4f"
+    },
+    {
+      "path": "www/my_style.css",
+      "bytes": 1682,
+      "sha256": "1e12b6744575b55230ad0e4234389fcd3b617b412cbe8ca140ec9ddfc9af0183"
+    }
+  ]
+}

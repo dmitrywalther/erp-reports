@@ -1,0 +1,9 @@
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+config.*.yml
+users.local.csv
+renv/library/
+demo/.runtime/
+dist/
