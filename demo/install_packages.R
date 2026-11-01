@@ -20,6 +20,13 @@ repo <- if (is_windows) {
 }
 options(repos = c(P3M = repo), timeout = 600)
 if (is_windows) options(pkgType = "win.binary")
+if (!is_windows) {
+  # --vanilla skips the Rocker startup profile; Posit needs this header to
+  # select binaries for the actual R version instead of compiling from source.
+  options(download.file.method = "libcurl", HTTPUserAgent = sprintf(
+    "R/%s R (%s)", getRversion(),
+    paste(getRversion(), R.version["platform"], R.version["arch"], R.version["os"])))
+}
 
 pkgs <- c(
   "shiny", "shinydashboard", "shinydashboardPlus", "shinyWidgets", "shinythemes", "shinyjs",
@@ -27,7 +34,7 @@ pkgs <- c(
   "DBI", "RPostgres", "config", "jsonlite",
   "tidyverse", "lubridate", "readxl", "writexl", "openxlsx",
   "DT", "reactable", "gt", "highcharter", "leaflet", "paletteer", "viridis", "xts", "htmltools",
-  "sf", "bizdays", "sodium"
+  "sf", "bizdays", "sodium", "V8"
 )
 install.packages(pkgs, lib = lib)
 

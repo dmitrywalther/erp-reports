@@ -2,6 +2,7 @@
 # В нём приложение работает с синтетическими данными в локальном PostgreSQL
 # (см. demo/), а Elasticsearch заменён заглушкой demo/elastic_stub.R.
 DEMO_MODE <- tolower(Sys.getenv("ERP_REPORTS_DEMO", "false")) %in% c("true", "1", "yes")
+ONLINE_DEMO <- DEMO_MODE && tolower(Sys.getenv("ERP_REPORTS_ONLINE", "false")) %in% c("true", "1", "yes")
 source("report_utils.R", encoding = "UTF-8")
 
 library(shiny) # создание интерактивных веб-приложений

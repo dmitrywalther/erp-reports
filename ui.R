@@ -59,7 +59,9 @@ dashboardPage(
                   ),
                   
                   if (DEMO_MODE) tags$div(class = "alert alert-info", role = "status",
-                    "Демонстрационные данные: сотрудники, клиенты, рейсы и финансовые показатели вымышлены."),
+                    "Демонстрационные данные: сотрудники, клиенты, рейсы и финансовые показатели вымышлены.",
+                    tags$br(), "Для входа: логин ", tags$strong("demo"),
+                    ", пароль ", tags$strong("demo"), "."),
                   loginUI("login"),
 
                   tabItems(

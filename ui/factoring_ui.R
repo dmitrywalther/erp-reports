@@ -7,7 +7,7 @@ factoring_tabName <- tabItem(tabName = "factoring", fluidRow(
                      language = "ru",
                      weekstart = 1,
                      format = "dd.mm.yyyy"),
-      fileInput(
+      if (ONLINE_DEMO) helpText("Загрузка Excel доступна при локальном запуске демо.") else fileInput(
         inputId = "factoringInput",
         label = "Загрузить данные по факторингу",
         multiple = FALSE,

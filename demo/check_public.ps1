@@ -13,7 +13,7 @@ $files = @($items | Where-Object { -not $_.PSIsContainer })
 $paths = @($files | ForEach-Object { $_.FullName.Substring($root.Length + 1).Replace('\', '/') })
 foreach ($directory in $items | Where-Object { $_.PSIsContainer -and $_.FullName -ne $root }) {
   $relative = $directory.FullName.Substring($root.Length + 1).Replace('\', '/')
-  if ($relative -notin @('demo', 'docs', 'docs/screenshots', 'ui', 'www')) { $findings.Add("non-whitelisted-directory: $relative") }
+  if ($relative -notin @('demo', 'demo/online', 'docs', 'docs/screenshots', 'ui', 'www')) { $findings.Add("non-whitelisted-directory: $relative") }
 }
 foreach ($required in $allowed) {
   if ($required -notin $paths) { $findings.Add("missing-file: $required") }
@@ -49,7 +49,11 @@ foreach ($file in $files) {
       }
     }
     foreach ($credential in [regex]::Matches($line, '(?i)(?:password|passwd|pwd|api[_-]?key|secret[_-]?access[_-]?key|secret|token)\s*(?:=|:|<-)\s*["'']([^"'']+)["'']')) {
-      if ($credential.Groups[1].Value -notin @('demo', 'postgres')) { $findings.Add("literal-credential: ${relative}:$lineNumber") }
+      $value = $credential.Groups[1].Value
+      # A shell variable or psql's quoted variable binding is not a literal secret.
+      $shellReference = $file.Extension -ieq '.sh' -and $value -match '^\$(?:[A-Za-z_][A-Za-z0-9_]*|\{[A-Za-z_][A-Za-z0-9_]*\})$'
+      $psqlReference = $file.Extension -in @('.sh', '.sql') -and $credential.Value -match '(?i)^password\s*:\s*''[A-Za-z_][A-Za-z0-9_]*''$'
+      if ($value -notin @('demo', 'postgres') -and -not $shellReference -and -not $psqlReference) { $findings.Add("literal-credential: ${relative}:$lineNumber") }
     }
     if ($line -match '(?i)^\s*[A-Z_]*(?:PASSWORD|TOKEN|SECRET|WEBHOOK_URL)\s*:\s*(\S+)') {
       if ($Matches[1] -notin @('demo', '"demo"', "'demo'", '!expr')) { $findings.Add("yaml-credential: ${relative}:$lineNumber") }

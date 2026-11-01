@@ -16,111 +16,6 @@ source("helpers.R", encoding="utf-8")
 source("production_calendar.R", encoding="utf-8")
 
 
-# Авансирование перевозчиков
-
-carrier_prepayment_table <- reactiveValues(data = NULL)
-
-# Здоровье клиента
-client_health_table <- reactiveValues(data = NULL)
-
-# НДЗ/ПДЗ
-DZ_unconfirmed_receivables_table <- reactiveValues(data = NULL)
-DZ_confirmed_receivables_table <- reactiveValues(data = NULL)
-DZ_receivable_turnover_table <- reactiveValues(data = NULL)
-
-# Дашборд ДЗ
-health_dz_table <- reactiveValues(data = NULL)
-overdue_dz_table <- reactiveValues(data = NULL)
-unformed_bills_table <- reactiveValues(data = NULL)
-funnel_NDZ_table <- reactiveValues(data = NULL)
-dz_turnover_table <- reactiveValues(data = NULL)
-
-# Выработка логистов по загруженным заявкам
-logisticKPI <- reactiveValues(data = NULL)
-
-# Фактические показатели по выгруженным заявкам
-RevenueProfitTable <- reactiveValues(data = NULL)
-
-# Обработанные заявки
-verifiedDocsTable <- reactiveValues(data = NULL)
-# Выставленные счета
-billsTable <- reactiveValues(data = NULL)
-# Проведённые акты
-actTable <- reactiveValues(data = NULL)
-billsNewTable <- reactiveValues(data = NULL)
-# Контроль за дебиторской задолженностью
-dzTable <- reactiveValues(data = NULL)
-
-# Рейсы
-requestsTable <- reactiveValues(data = NULL)
-
-# Рейсы - Спец. РЦ
-requestsTable_specialDC <- reactiveValues(data = NULL)
-
-# Кредиторская задолженность
-kzTable <- reactiveValues(data = NULL)
-
-# Сорванные рейсы
-breakdownsTable <- reactiveValues(data = NULL)
-cancelingTableNew <- reactiveValues(data = NULL)
-breakdownsTableNew <- reactiveValues(data = NULL)
-
-# Конверсия обращений в БД перевозчиков
-newOldCarriersTable <- reactiveValues(data = NULL)
-# Просроченные заявки
-lateOrdersTable <- reactiveValues(data = NULL)
-
-
-# Служба безопасности 
-drivers_everyday <- reactiveValues(data = data.frame(Дата = Sys.Date(), Сотрудник = "", Всего = 0, Создано = 0, Изменено = 0)) 
-carriers_everyday <- reactiveValues(data = data.frame(Дата = Sys.Date(), Сотрудник = "", Всего = 0, Создано = 0, Изменено = 0)) 
-vehicles_everyday <- reactiveValues(data = data.frame(Дата = Sys.Date(), Сотрудник = "", Всего = 0, Создано = 0, Изменено = 0)) 
-
-drivers_status_change <- reactiveValues(data = NULL)
-carriers_status_change <- reactiveValues(data = NULL)
-vehicles_status_change <- reactiveValues(data = NULL)
-
-# Спотовые заявки с площадок
-spotTable <- reactiveValues(data = NULL)
-
-# Индикатив цен
-indicativeTable <- reactiveValues(data = NULL)
-indicativeTable1 <- reactiveValues(data = NULL)
-indicativeTable2 <- reactiveValues(data = NULL)
-
-# Время наибольшей загруженности
-countRequestsTable <- reactiveValues(data = NULL)
-
-# Среднее время закрытия рейса
-averageTimeTable <- reactiveValues(data = NULL)
-averageTimeTable1 <- reactiveValues(data = NULL)
-
-# Количество перевозчиков
-driverCountTable <- reactiveValues(data = NULL)
-carrierCountTable <- reactiveValues(data = NULL)
-
-# Движения ДС
-cashTable <- reactiveValues(data = NULL)
-
-# Реестры для страховой
-registersForInsuranceTable <- reactiveValues(data = NULL)
-
-# Метрики
-metricTable <- reactiveValues(data = NULL)
-metricTable1 <- reactiveValues(data = NULL)
-
-# Кругорейсы
-doubletsTable <- reactiveValues(data = NULL)
-clientDirectionsTable <- reactiveValues(data = NULL)
-
-# Рейсы с низкой рентабельностью
-requestProfitabilityTable <- reactiveValues(data = NULL)
-
-# metricTable_completed <- reactiveValues(data = NULL)
-# metricTable_canceling <- reactiveValues(data = NULL)
-# metricTable_breakdowns <- reactiveValues(data = NULL)
-# metricTable_expired <- reactiveValues(data = NULL)
-
 # Оформление excel-таблиц
 hs2 <- createStyle(
   fontColour = "#000000", fgFill = "#99ff99",
@@ -191,9 +86,35 @@ knockout_pct_color <- make_color_pal(c("#ffffff", "#f2fbd2", "#c9ecb4", "#93d3ab
 # Маршрут между двумя точками через публичный сервер OSRM. Если сервер
 # недоступен (нет сети, прокси), рисуем прямую линию и оцениваем расстояние
 # по формуле гаверсинуса с коэффициентом извилистости 1.3.
+online_osrm_route <- function(pts, fetch = curl::curl_fetch_memory, make_handle = curl::new_handle) {
+  # osrm 4.0 creates its own curl handle without a timeout. Use the same Route
+  # API with an explicitly bounded handle for the public online demo.
+  coords <- cbind(pts$x, pts$y)
+  stopifnot(nrow(coords) >= 2L, ncol(coords) == 2L, all(is.finite(coords)))
+  server <- paste0(sub("/+$", "", getOption("osrm.server")), "/")
+  profile <- getOption("osrm.profile")
+  base <- if (server == "https://routing.openstreetmap.de/") {
+    paste0(server, "routed-", profile, "/route/v1/driving/")
+  } else paste0(server, "route/v1/", profile, "/")
+  url <- paste0(base, paste(apply(coords, 1, paste, collapse = ","), collapse = ";"),
+                "?alternatives=false&geometries=geojson&steps=false&overview=full&generate_hints=false")
+  response <- fetch(utils::URLencode(url), handle = make_handle(
+    timeout = 5, connecttimeout = 5, useragent = "ERP-Reports-Demo"))
+  if (response$status_code != 200L) stop("OSRM HTTP request failed.")
+  result <- jsonlite::fromJSON(rawToChar(response$content), simplifyVector = FALSE)
+  if (!identical(result$code, "Ok") || !length(result$routes)) stop("OSRM route unavailable.")
+  route <- result$routes[[1]]
+  geometry <- matrix(unlist(route$geometry$coordinates), ncol = 2, byrow = TRUE)
+  stopifnot(identical(route$geometry$type, "LineString"), nrow(geometry) >= 2L,
+            all(is.finite(geometry)), is.finite(route$duration), is.finite(route$distance))
+  sf::st_sf(src = "start", dst = "finish", duration = route$duration / 60,
+            distance = route$distance / 1000,
+            geometry = sf::st_sfc(sf::st_linestring(geometry), crs = 4326))
+}
+
 safe_osrm_route <- function(pts) {
   tryCatch(
-    osrmRoute(loc = pts, returnclass = "sf", overview = "full"),
+    if (ONLINE_DEMO) online_osrm_route(pts) else osrmRoute(loc = pts, returnclass = "sf", overview = "full"),
     error = function(e) {
       message("OSRM недоступен, строим прямую: ", conditionMessage(e))
       to_rad <- pi / 180
@@ -214,6 +135,111 @@ BuYlRd <- function(x) rgb(colorRamp(c("#7fb7d7", "#ffffbf", "#fc8d59"))(safe_ram
 # Пользователи загружаются в начале файла; demo/demo доступен только в DEMO_MODE.
 
 function(input, output, session){
+  # Данные отчётов принадлежат текущей сессии, а не всем посетителям.
+  # Авансирование перевозчиков
+
+  carrier_prepayment_table <- reactiveValues(data = NULL)
+
+  # Здоровье клиента
+  client_health_table <- reactiveValues(data = NULL)
+
+  # НДЗ/ПДЗ
+  DZ_unconfirmed_receivables_table <- reactiveValues(data = NULL)
+  DZ_confirmed_receivables_table <- reactiveValues(data = NULL)
+  DZ_receivable_turnover_table <- reactiveValues(data = NULL)
+
+  # Дашборд ДЗ
+  health_dz_table <- reactiveValues(data = NULL)
+  overdue_dz_table <- reactiveValues(data = NULL)
+  unformed_bills_table <- reactiveValues(data = NULL)
+  funnel_NDZ_table <- reactiveValues(data = NULL)
+  dz_turnover_table <- reactiveValues(data = NULL)
+
+  # Выработка логистов по загруженным заявкам
+  logisticKPI <- reactiveValues(data = NULL)
+
+  # Фактические показатели по выгруженным заявкам
+  RevenueProfitTable <- reactiveValues(data = NULL)
+
+  # Обработанные заявки
+  verifiedDocsTable <- reactiveValues(data = NULL)
+  # Выставленные счета
+  billsTable <- reactiveValues(data = NULL)
+  # Проведённые акты
+  actTable <- reactiveValues(data = NULL)
+  billsNewTable <- reactiveValues(data = NULL)
+  # Контроль за дебиторской задолженностью
+  dzTable <- reactiveValues(data = NULL)
+
+  # Рейсы
+  requestsTable <- reactiveValues(data = NULL)
+
+  # Рейсы - Спец. РЦ
+  requestsTable_specialDC <- reactiveValues(data = NULL)
+
+  # Кредиторская задолженность
+  kzTable <- reactiveValues(data = NULL)
+
+  # Сорванные рейсы
+  breakdownsTable <- reactiveValues(data = NULL)
+  cancelingTableNew <- reactiveValues(data = NULL)
+  breakdownsTableNew <- reactiveValues(data = NULL)
+
+  # Конверсия обращений в БД перевозчиков
+  newOldCarriersTable <- reactiveValues(data = NULL)
+  # Просроченные заявки
+  lateOrdersTable <- reactiveValues(data = NULL)
+
+
+  # Служба безопасности
+  drivers_everyday <- reactiveValues(data = data.frame(Дата = Sys.Date(), Сотрудник = "", Всего = 0, Создано = 0, Изменено = 0))
+  carriers_everyday <- reactiveValues(data = data.frame(Дата = Sys.Date(), Сотрудник = "", Всего = 0, Создано = 0, Изменено = 0))
+  vehicles_everyday <- reactiveValues(data = data.frame(Дата = Sys.Date(), Сотрудник = "", Всего = 0, Создано = 0, Изменено = 0))
+
+  drivers_status_change <- reactiveValues(data = NULL)
+  carriers_status_change <- reactiveValues(data = NULL)
+  vehicles_status_change <- reactiveValues(data = NULL)
+
+  # Спотовые заявки с площадок
+  spotTable <- reactiveValues(data = NULL)
+
+  # Индикатив цен
+  indicativeTable <- reactiveValues(data = NULL)
+  indicativeTable1 <- reactiveValues(data = NULL)
+  indicativeTable2 <- reactiveValues(data = NULL)
+
+  # Время наибольшей загруженности
+  countRequestsTable <- reactiveValues(data = NULL)
+
+  # Среднее время закрытия рейса
+  averageTimeTable <- reactiveValues(data = NULL)
+  averageTimeTable1 <- reactiveValues(data = NULL)
+
+  # Количество перевозчиков
+  driverCountTable <- reactiveValues(data = NULL)
+  carrierCountTable <- reactiveValues(data = NULL)
+
+  # Движения ДС
+  cashTable <- reactiveValues(data = NULL)
+
+  # Реестры для страховой
+  registersForInsuranceTable <- reactiveValues(data = NULL)
+
+  # Метрики
+  metricTable <- reactiveValues(data = NULL)
+  metricTable1 <- reactiveValues(data = NULL)
+
+  # Кругорейсы
+  doubletsTable <- reactiveValues(data = NULL)
+  clientDirectionsTable <- reactiveValues(data = NULL)
+
+  # Рейсы с низкой рентабельностью
+  requestProfitabilityTable <- reactiveValues(data = NULL)
+
+  # metricTable_completed <- reactiveValues(data = NULL)
+  # metricTable_canceling <- reactiveValues(data = NULL)
+  # metricTable_breakdowns <- reactiveValues(data = NULL)
+  # metricTable_expired <- reactiveValues(data = NULL)
   
   # call login module supplying data frame,
   # user and password cols and reactive trigger
@@ -601,10 +627,12 @@ function(input, output, session){
       ### Открытые рейсы ###
       ######################
       
-      isolate(updateSelectizeInput(session, 'client_active_requests', choices = c("Все", unique(getActualRequests()$Клиент)), server = FALSE))
-
-      # Run every 30 seconds
-      actualRequests <- reactivePoll(30000, session,
+      # Online synthetic data do not change during a container's lifetime.
+      # Keep the existing 30-second polling for local/private deployments.
+      actualRequests <- if (ONLINE_DEMO) local({
+        snapshot <- getActualRequests()
+        reactive(snapshot)
+      }) else reactivePoll(30000, session,
 
                                      #A function whose values over time will be tested for equality; inequality indicates that the underlying value has changed and needs to be invalidated and re-read using valueFunc
                                      checkFunc = function(){
@@ -616,6 +644,8 @@ function(input, output, session){
                                      valueFunc = function() {
                                        getActualRequests()
                                      })
+
+      isolate(updateSelectizeInput(session, 'client_active_requests', choices = c("Все", unique(actualRequests()$Клиент)), server = FALSE))
       
       actualRequests_selectedByClient <- reactive({
         if (input$client_active_requests != "Все") {
@@ -2041,6 +2071,7 @@ function(input, output, session){
   # Здоровье клиента
   
   excel_data <- reactive({
+    req(!ONLINE_DEMO)
     file_cost_data <- input$cost_data_from_file
     ext <- tools::file_ext(file_cost_data$datapath)
     
@@ -3033,7 +3064,7 @@ function(input, output, session){
                                         },
                                         cell = function(value, index) {
                   days <- DZ_unconfirmed_receivables_table$data$`В ожидании.y`[index]
-                  days <- if (!is.na(days)) days else 0
+                  days[is.na(days)] <- 0L
                   div(
                     div(style = list(fontWeight = 600), paste(format(value, big.mark=" ", digits = 2, scientific = FALSE), "\U20BD")),
                     div(style = list(fontSize = 12), paste(format(days, big.mark=" ", digits = 2, scientific = FALSE), "дней"))
@@ -3041,10 +3072,10 @@ function(input, output, session){
                 }, defaultSortOrder = "desc", format = colFormat(separators = TRUE, digits = 2), 
                 footer = function(values) {
                   days <- DZ_unconfirmed_receivables_table$data$`В ожидании.y`
-                  days <- if (!is.na(days)) days else 0
+                  days[is.na(days)] <- 0L
                   div(
                     div(style = list(fontWeight = 600), paste(format(sum(values), big.mark=" ", digits = 2, scientific = FALSE), "\U20BD")),
-                    div(style = list(fontSize = 12), paste(format(mean(days, na.rm = TRUE), big.mark=" ", digits = 2, scientific = FALSE), "дней"))
+                    div(style = list(fontSize = 12), paste(if (length(days)) format(mean(days, na.rm = TRUE), big.mark=" ", digits = 2, scientific = FALSE) else "\u2013", "дней"))
                   )
                 }),
                 Полученные.x = colDef(name = "Полученные", 
@@ -3053,7 +3084,7 @@ function(input, output, session){
                                       },
                                       cell = function(value, index) {
                   days <- DZ_unconfirmed_receivables_table$data$`Полученные.y`[index]
-                  days <- if (!is.na(days)) days else 0
+                  days[is.na(days)] <- 0L
                   div(
                     div(style = list(fontWeight = 600), paste(format(value, big.mark=" ", digits = 2, scientific = FALSE), "\U20BD")),
                     div(style = list(fontSize = 12), paste(format(days, big.mark=" ", digits = 2, scientific = FALSE), "дней"))
@@ -3061,10 +3092,10 @@ function(input, output, session){
                 }, format = colFormat(separators = TRUE, digits = 2),
                 footer = function(values) {
                   days <- DZ_unconfirmed_receivables_table$data$`Полученные.y`
-                  days <- if (!is.na(days)) days else 0
+                  days[is.na(days)] <- 0L
                   div(
                     div(style = list(fontWeight = 600), paste(format(sum(values), big.mark=" ", digits = 2, scientific = FALSE), "\U20BD")),
-                    div(style = list(fontSize = 12), paste(format(mean(days, na.rm = TRUE), big.mark=" ", digits = 2, scientific = FALSE), "дней"))
+                    div(style = list(fontSize = 12), paste(if (length(days)) format(mean(days, na.rm = TRUE), big.mark=" ", digits = 2, scientific = FALSE) else "\u2013", "дней"))
                   )
                 }
                 ),
@@ -3074,7 +3105,7 @@ function(input, output, session){
                                        },
                                        cell = function(value, index) {
                   days <- DZ_unconfirmed_receivables_table$data$`Проверенные.y`[index]
-                  days <- if (!is.na(days)) days else 0
+                  days[is.na(days)] <- 0L
                   div(
                     div(style = list(fontWeight = 600), paste(format(value, big.mark=" ", digits = 2, scientific = FALSE), "\U20BD")),
                     div(style = list(fontSize = 12), paste(format(days, big.mark=" ", digits = 2, scientific = FALSE), "дней"))
@@ -3082,10 +3113,10 @@ function(input, output, session){
                 }, format = colFormat(separators = TRUE, digits = 2), 
                 footer = function(values) {
                   days <- DZ_unconfirmed_receivables_table$data$`Проверенные.y`
-                  days <- if (!is.na(days)) days else 0
+                  days[is.na(days)] <- 0L
                   div(
                     div(style = list(fontWeight = 600), paste(format(sum(values), big.mark=" ", digits = 2, scientific = FALSE), "\U20BD")),
-                    div(style = list(fontSize = 12), paste(format(mean(days, na.rm = TRUE), big.mark=" ", digits = 2, scientific = FALSE), "дней"))
+                    div(style = list(fontSize = 12), paste(if (length(days)) format(mean(days, na.rm = TRUE), big.mark=" ", digits = 2, scientific = FALSE) else "\u2013", "дней"))
                   )
                 }
                 ),
@@ -3095,7 +3126,7 @@ function(input, output, session){
                                     },
                                     cell = function(value, index) {
                   days <- DZ_unconfirmed_receivables_table$data$`Проблемные (пер.).y`[index]
-                  days <- if (!is.na(days)) days else 0
+                  days[is.na(days)] <- 0L
                   div(
                     div(style = list(fontWeight = 600), paste(format(value, big.mark=" ", digits = 2, scientific = FALSE), "\U20BD")),
                     div(style = list(fontSize = 12), paste(format(days, big.mark=" ", digits = 2, scientific = FALSE), "дней"))
@@ -3103,10 +3134,10 @@ function(input, output, session){
                 }, format = colFormat(separators = TRUE, digits = 2), 
                 footer = function(values) {
                   days <- DZ_unconfirmed_receivables_table$data$`Проблемные (пер.).y`
-                  days <- if (!is.na(days)) days else 0
+                  days[is.na(days)] <- 0L
                   div(
                     div(style = list(fontWeight = 600), paste(format(sum(values), big.mark=" ", digits = 2, scientific = FALSE), "\U20BD")),
-                    div(style = list(fontSize = 12), paste(format(mean(days, na.rm = TRUE), big.mark=" ", digits = 2, scientific = FALSE), "дней"))
+                    div(style = list(fontSize = 12), paste(if (length(days)) format(mean(days, na.rm = TRUE), big.mark=" ", digits = 2, scientific = FALSE) else "\u2013", "дней"))
                   )
                 }
                 ),
@@ -3116,7 +3147,7 @@ function(input, output, session){
                                           },
                                           cell = function(value, index) {
                   days <- DZ_unconfirmed_receivables_table$data$`Сформированные.y`[index]
-                  days <- if (!is.na(days)) days else 0
+                  days[is.na(days)] <- 0L
                   div(
                     div(style = list(fontWeight = 600), paste(format(value, big.mark=" ", digits = 2, scientific = FALSE), "\U20BD")),
                     div(style = list(fontSize = 12), paste(format(days, big.mark=" ", digits = 2, scientific = FALSE), "дней"))
@@ -3124,10 +3155,10 @@ function(input, output, session){
                 }, format = colFormat(separators = TRUE, digits = 2), 
                 footer = function(values) {
                   days <- DZ_unconfirmed_receivables_table$data$`Сформированные.y`
-                  days <- if (!is.na(days)) days else 0
+                  days[is.na(days)] <- 0L
                   div(
                     div(style = list(fontWeight = 600), paste(format(sum(values), big.mark=" ", digits = 2, scientific = FALSE), "\U20BD")),
-                    div(style = list(fontSize = 12), paste(format(mean(days, na.rm = TRUE), big.mark=" ", digits = 2, scientific = FALSE), "дней"))
+                    div(style = list(fontSize = 12), paste(if (length(days)) format(mean(days, na.rm = TRUE), big.mark=" ", digits = 2, scientific = FALSE) else "\u2013", "дней"))
                   )
                 }
                 ),
@@ -3137,7 +3168,7 @@ function(input, output, session){
                                         },
                                         cell = function(value, index) {
                   days <- DZ_unconfirmed_receivables_table$data$`Отправленные.y`[index]
-                  days <- if (!is.na(days)) days else 0
+                  days[is.na(days)] <- 0L
                   div(
                     div(style = list(fontWeight = 600), paste(format(value, big.mark=" ", digits = 2, scientific = FALSE), "\U20BD")),
                     div(style = list(fontSize = 12), paste(format(days, big.mark=" ", digits = 2, scientific = FALSE), "дней"))
@@ -3145,10 +3176,10 @@ function(input, output, session){
                 }, format = colFormat(separators = TRUE, digits = 2), 
                 footer = function(values) {
                   days <- DZ_unconfirmed_receivables_table$data$`Отправленные.y`
-                  days <- if (!is.na(days)) days else 0
+                  days[is.na(days)] <- 0L
                   div(
                     div(style = list(fontWeight = 600), paste(format(sum(values), big.mark=" ", digits = 2, scientific = FALSE), "\U20BD")),
-                    div(style = list(fontSize = 12), paste(format(mean(days, na.rm = TRUE), big.mark=" ", digits = 2, scientific = FALSE), "дней"))
+                    div(style = list(fontSize = 12), paste(if (length(days)) format(mean(days, na.rm = TRUE), big.mark=" ", digits = 2, scientific = FALSE) else "\u2013", "дней"))
                   )
                 }
                 ),
@@ -3158,7 +3189,7 @@ function(input, output, session){
                                                },
                                                cell = function(value, index) {
                                                  days <- DZ_unconfirmed_receivables_table$data$`Проблемные (кл.).y`[index]
-                                                 days <- if (!is.na(days)) days else 0
+                                                 days[is.na(days)] <- 0L
                                                  div(
                                                    div(style = list(fontWeight = 600), paste(format(value, big.mark=" ", digits = 2, scientific = FALSE), "\U20BD")),
                                                    div(style = list(fontSize = 12), paste(format(days, big.mark=" ", digits = 2, scientific = FALSE), "дней"))
@@ -3166,10 +3197,10 @@ function(input, output, session){
                                                }, format = colFormat(separators = TRUE, digits = 2), 
                                                footer = function(values) {
                                                  days <- DZ_unconfirmed_receivables_table$data$`Проблемные (кл.).y`
-                                                 days <- if (!is.na(days)) days else 0
+                                                 days[is.na(days)] <- 0L
                                                  div(
                                                    div(style = list(fontWeight = 600), paste(format(sum(values), big.mark=" ", digits = 2, scientific = FALSE), "\U20BD")),
-                                                   div(style = list(fontSize = 12), paste(format(mean(days, na.rm = TRUE), big.mark=" ", digits = 2, scientific = FALSE), "дней"))
+                                                   div(style = list(fontSize = 12), paste(if (length(days)) format(mean(days, na.rm = TRUE), big.mark=" ", digits = 2, scientific = FALSE) else "\u2013", "дней"))
                                                  )
                                                }
                 ),
@@ -6654,7 +6685,7 @@ function(input, output, session){
 
       hc_add_theme(hc_theme_ffx()) %>%
 
-      hc_credits(enabled = T, text = "По данным abi-loadboard.auth0.com")
+      hc_credits(enabled = T, text = if (DEMO_MODE) "Синтетические данные демо" else "Данные спотовой площадки")
 
   })
   
@@ -10797,6 +10828,7 @@ function(input, output, session){
       paste("План-факт, логисты-", Sys.Date(), ".xlsx", sep="")
     },
     content = function(file) {
+      req(!ONLINE_DEMO)
       
       file_plan <- input$planLogisticianInput
       ext <- tools::file_ext(file_plan$datapath)
@@ -11163,6 +11195,7 @@ function(input, output, session){
       paste("Выставленные счета + факторинг - ", Sys.Date(), ".xlsx", sep="")
     },
     content = function(file) {
+      req(!ONLINE_DEMO)
       
       file_factoring <- input$factoringInput
       ext <- tools::file_ext(file_factoring$datapath)

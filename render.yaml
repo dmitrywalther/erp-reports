@@ -1,0 +1,16 @@
+# One free service; no managed database, disk, paid plan or extra instance.
+services:
+  - type: web
+    name: erp-reports-demo
+    runtime: docker
+    plan: free
+    region: frankfurt
+    repo: https://github.com/dmitrywalther/erp-reports
+    branch: main
+    dockerfilePath: ./demo/online/Dockerfile
+    dockerContext: .
+    healthCheckPath: /health/ready
+    autoDeployTrigger: "off"
+    envVars:
+      - key: ERP_REPORTS_DEMO
+        value: "true"

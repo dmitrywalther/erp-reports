@@ -111,7 +111,7 @@ client_health_tabItem <- tabItem(tabName = "client_health",
                                     #   digitGroupSeparator = " ",
                                     #   decimalCharacter = "."
                                     # )),
-                                    column(width = 12, fileInput(
+                                    column(width = 12, if (ONLINE_DEMO) helpText("Загрузка Excel доступна при локальном запуске демо.") else fileInput(
                                       inputId = "cost_data_from_file",
                                       label = "Загрузить данные по издержкам",
                                       multiple = FALSE,

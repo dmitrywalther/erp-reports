@@ -12,7 +12,7 @@ $env:LC_ALL = 'Russian_Russia.1251'
 $env:LC_CTYPE = 'Russian_Russia.1251'
 $env:R_LIBS_USER = $RLib
 $rscript = Join-Path $RHome 'bin\Rscript.exe'
-foreach ($testName in @('test_report_ratios.R', 'test_calendar.R', 'test_kpi.R', 'test_spot.R', 'test_unformed_bills.R', 'test_seed_lifecycle.R', 'test_doublets.R', 'test_public_config.R', 'test_public_support.R')) {
+foreach ($testName in @('test_report_ratios.R', 'test_calendar.R', 'test_kpi.R', 'test_spot.R', 'test_unformed_bills.R', 'test_seed_lifecycle.R', 'test_doublets.R', 'test_public_config.R', 'test_public_support.R', 'test_session_isolation.R', 'test_online_runtime.R')) {
   Write-Host "Checking $testName..."
   & $rscript --vanilla -e "source('demo/$testName', encoding='UTF-8')"
   if ($LASTEXITCODE -ne 0) { throw "$testName failed (exit $LASTEXITCODE)." }

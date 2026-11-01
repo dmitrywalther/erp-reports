@@ -1,11 +1,11 @@
 {
   "format": "erp-reports-public/v1",
-  "generated_at_utc": "2026-11-01T17:42:20.9215259Z",
+  "generated_at_utc": "2026-11-01T19:44:56.5821499Z",
   "files": [
     {
       "path": ".dockerignore",
-      "bytes": 213,
-      "sha256": "e884b8de8fa4e2b41a6d0878eb485ff9fa062458eb466e8ed0ea39a32ad21e78"
+      "bytes": 1418,
+      "sha256": "c13904741553c508dc1a66557a7cb8f0e244428154c02a10aeac3f15b301696c"
     },
     {
       "path": ".gitignore",
@@ -19,8 +19,8 @@
     },
     {
       "path": "demo/check_public.ps1",
-      "bytes": 6489,
-      "sha256": "c722e084c3c796b70ca01fd0d94499c5c02cfa582278ee2dcbcfb91858e0a177"
+      "bytes": 6931,
+      "sha256": "0bf1b0a16c48e48c2a8dea2a520d932b8615c4ee7cceb4114babad9b340092bb"
     },
     {
       "path": "demo/docker-compose.yml",
@@ -39,18 +39,33 @@
     },
     {
       "path": "demo/export_public.ps1",
-      "bytes": 7987,
-      "sha256": "b0524c0a9413b23da9341189cad65d813c42489959699cb325bd5292ef521c90"
+      "bytes": 8954,
+      "sha256": "e0efc9e32736c93b4a7fa361f9b12067a4a09f92e5e320411277a99040de0c44"
     },
     {
       "path": "demo/install_packages.R",
-      "bytes": 2153,
-      "sha256": "018d864a13ac5c6c259a86aa478033c648f2e27614f47e4b72e8c346f14d845d"
+      "bytes": 2523,
+      "sha256": "426706712dab2f2ce7aeda9911c3efa0e352ea87e303b21e8f7b28f126751f99"
+    },
+    {
+      "path": "demo/online/Dockerfile",
+      "bytes": 2110,
+      "sha256": "1f178d06de568b939cb5ac51067fcbf0504bbbc357a913e4fe2c4470ece11097"
+    },
+    {
+      "path": "demo/online/entrypoint.sh",
+      "bytes": 7671,
+      "sha256": "fc4e6082c3036aea42989cceec5281d59509104418a5d6676fbd6aaf8c6c2857"
+    },
+    {
+      "path": "demo/online/run_app.R",
+      "bytes": 3354,
+      "sha256": "97f1bf0a8823e3fb72e33a57bb3c14b3638383681a647b32122415c85539b83d"
     },
     {
       "path": "demo/public_files.txt",
-      "bytes": 1648,
-      "sha256": "3dc15691ac9ec0bee128aca5cbcc1770d877a4b667c57237acef1548f4f0729b"
+      "bytes": 1808,
+      "sha256": "83a06ce2086ff48a7babfabf92d51f387dbd008065607d2f8d34bbaf0d3dea9c"
     },
     {
       "path": "demo/public_support.R",
@@ -79,8 +94,8 @@
     },
     {
       "path": "demo/test_doublets.R",
-      "bytes": 3290,
-      "sha256": "4c975607c034fcbec43f5c6589ad06e9148eecb9682eb39b369546fb183d21c8"
+      "bytes": 5962,
+      "sha256": "715fa99a1331ec04f708616033ad95b3f3c48e3b54d47322800bf95ba2558e42"
     },
     {
       "path": "demo/test_helpers.ps1",
@@ -89,13 +104,18 @@
     },
     {
       "path": "demo/test_helpers.R",
-      "bytes": 9384,
-      "sha256": "09f61c7eb102fb4934197c94f817508462dadd4d2e3bd5faba039105bfe86cbf"
+      "bytes": 12493,
+      "sha256": "d9f24806fcc2c1baf079f816bef15b8b9b2a9cd9c2fd22db47bb01e639b52fe8"
     },
     {
       "path": "demo/test_kpi.R",
       "bytes": 7143,
       "sha256": "0ea5a140e70db9fffdad8b466195438abf48dafe558a9c3af02d6dbf263d1550"
+    },
+    {
+      "path": "demo/test_online_runtime.R",
+      "bytes": 5867,
+      "sha256": "a708c2f95550bc521fb38216cc46d43d6bbb1a42edb141d9bb78ad5992c51f7e"
     },
     {
       "path": "demo/test_public_config.R",
@@ -104,23 +124,28 @@
     },
     {
       "path": "demo/test_public_support.R",
-      "bytes": 5820,
-      "sha256": "47132cd254fcebebcc47aff43e6632749fbb424882a7077ef86136ab97a0d92d"
+      "bytes": 10125,
+      "sha256": "652c941a5a59e2ef1606a871ca99e700d3ce8ecdbd38153f3088b50df5ece9db"
     },
     {
       "path": "demo/test_report_ratios.R",
-      "bytes": 899,
-      "sha256": "190ebc7e76e58d9bc5accd98539a683dc47ba5f45bbb7e6da8703c20700a371c"
+      "bytes": 3720,
+      "sha256": "d451eb814e8ee2c135668d8804b546fec0b802a69f95013db10e0be1580a5b10"
     },
     {
       "path": "demo/test_reports.ps1",
-      "bytes": 1153,
-      "sha256": "2e5a45dd9d676a7744fbfcbacd1b47bd270e8c5ca35b3dfb14ba69848209faf8"
+      "bytes": 1206,
+      "sha256": "5fd4b8291cf3cfe231258a30324dc4e34afea165886058a6f7fe6a4ade66eec5"
     },
     {
       "path": "demo/test_seed_lifecycle.R",
       "bytes": 4076,
       "sha256": "2bfb35434f664afb0daf35aefd1749c5a4142e7068bcb792560d4d97f36f5583"
+    },
+    {
+      "path": "demo/test_session_isolation.R",
+      "bytes": 5877,
+      "sha256": "35a020805b126fa25ea04693e30689e168297b6ddf7ad1c9889bb3783bd6235d"
     },
     {
       "path": "demo/test_spot.R",
@@ -131,6 +156,11 @@
       "path": "demo/test_unformed_bills.R",
       "bytes": 3472,
       "sha256": "52b23938847deef75421abcce351b65165bbf4f43f886e7beb3be7ea52e817f5"
+    },
+    {
+      "path": "docs/ONLINE_DEMO.md",
+      "bytes": 15528,
+      "sha256": "0eb87eaf94e0e592a60cf56377775f4f18e02566091e664c306c0ca6b7d33270"
     },
     {
       "path": "docs/PUBLICATION.md",
@@ -179,8 +209,8 @@
     },
     {
       "path": "global.R",
-      "bytes": 2335,
-      "sha256": "5a5c38c30e2ed7d7987a3b47e793e184b68fd233dfc11a8237aef6d1e9b03352"
+      "bytes": 2442,
+      "sha256": "3b02f228c3fd178cf9838ea9e1adaf51e535a69494b6dfe5a88c5358ccab8d96"
     },
     {
       "path": "helpers.R",
@@ -194,8 +224,13 @@
     },
     {
       "path": "README.md",
-      "bytes": 14363,
-      "sha256": "fb8a5c74b510225ea7d53a8721a0ed9ee9e63ba53312b2499face231ad10c373"
+      "bytes": 16431,
+      "sha256": "ca776ba8dcf7279311fb58fc226e33e425df31f6c0224dda479a9c69eaa227a5"
+    },
+    {
+      "path": "render.yaml",
+      "bytes": 451,
+      "sha256": "38235d9b4b5947fbb7f969291a3ef6b3b9d9723f4dad2062b0b367e69fd59026"
     },
     {
       "path": "report_utils.R",
@@ -204,13 +239,13 @@
     },
     {
       "path": "server.R",
-      "bytes": 664809,
-      "sha256": "21d7eebeba3dd2f0c1517175fe0c6cbdaf065baf46b24bec9abb75cbd19307b5"
+      "bytes": 667225,
+      "sha256": "6bea65a687c07cdc966e7086583aac80f6afa7e2d30a2e01290df772204f2dbf"
     },
     {
       "path": "ui.R",
-      "bytes": 4292,
-      "sha256": "a949ec2a4120b9326acdc47c4caff4c814e0d1c5e3fb142f06b3622626952088"
+      "bytes": 4445,
+      "sha256": "d6aed10ffcbcacccb91cdc756aee16e6b8cb0570433c070c49ee9be44dc3766f"
     },
     {
       "path": "ui/active_requests_ui.R",
@@ -249,8 +284,8 @@
     },
     {
       "path": "ui/client_health_ui.R",
-      "bytes": 10941,
-      "sha256": "e7b0029e199940772f6c787ff015d54b484a29b3a6675ea2f9bbf6fc6c164242"
+      "bytes": 11068,
+      "sha256": "d498380561ec3c2066cd71042644873853247bfd94bc4a33a24300db85770f7a"
     },
     {
       "path": "ui/count_requests_ui.R",
@@ -284,8 +319,8 @@
     },
     {
       "path": "ui/factoring_ui.R",
-      "bytes": 1055,
-      "sha256": "aadfa00ef9d4139b77b07d2ac374bbc195d9245eda36ec8acbf44d7931dc9ef6"
+      "bytes": 1182,
+      "sha256": "5e43258301b07a7a79f3127b2188fff6f0e9897e524785c4fac8053914dd1958"
     },
     {
       "path": "ui/KZ_ui.R",
@@ -299,8 +334,8 @@
     },
     {
       "path": "ui/logistician_plan_fact_ui.R",
-      "bytes": 1742,
-      "sha256": "c65788f400683a702b5af45d13ba336a3e8f90a60912abbb8054c4913cb8538f"
+      "bytes": 1869,
+      "sha256": "ccb39b36f0d804cd6b0946937b3297f769762224ab652d77a4a3a59cc069f844"
     },
     {
       "path": "ui/logisticMetrics_ui.R",

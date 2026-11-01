@@ -10,7 +10,7 @@ logistician_plan_fact_tabItem <- tabItem(tabName = "logistician_plan_fact", flui
                      weekstart = 1,
                      format = "dd.mm.yyyy"),
       
-      fileInput(
+      if (ONLINE_DEMO) helpText("Загрузка Excel доступна при локальном запуске демо.") else fileInput(
           inputId = "planLogisticianInput",
           label = "Загрузить план по логистам",
           multiple = FALSE,

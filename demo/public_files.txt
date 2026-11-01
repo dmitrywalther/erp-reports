@@ -8,6 +8,7 @@ production_calendar.R
 report_utils.R
 config.yml
 version
+render.yaml
 www/my_style.css
 ui/active_requests_ui.R
 ui/averageTime_ui.R
@@ -43,6 +44,9 @@ ui/specialDC_ui.R
 ui/spot_ui.R
 demo/Dockerfile
 demo/docker-compose.yml
+demo/online/Dockerfile
+demo/online/entrypoint.sh
+demo/online/run_app.R
 demo/schema.sql
 demo/seed_demo.R
 demo/elastic_stub.R
@@ -51,6 +55,8 @@ demo/run_demo.ps1
 demo/public_support.R
 demo/test_public_support.R
 demo/test_public_config.R
+demo/test_session_isolation.R
+demo/test_online_runtime.R
 demo/test_report_ratios.R
 demo/test_calendar.R
 demo/test_kpi.R
@@ -65,6 +71,7 @@ demo/export_public.ps1
 demo/check_public.ps1
 demo/public_files.txt
 docs/PUBLICATION.md
+docs/ONLINE_DEMO.md
 docs/screenshots/revenue-profit.jpg
 docs/screenshots/logistics-kpi.jpg
 docs/screenshots/receivables.jpg

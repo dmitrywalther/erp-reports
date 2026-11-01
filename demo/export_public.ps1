@@ -13,6 +13,26 @@ $stagingZip = "$staging.zip"
 $manifestName = 'PUBLIC_EXPORT_MANIFEST.json'
 $utf8 = [Text.UTF8Encoding]::new($false)
 
+function Get-PublicDockerRules([string[]]$Allowed) {
+  # Opening a directory can also admit descendants; exclude them again first.
+  # Every included source path comes from the reviewed public allowlist.
+  $rootFiles = @('global.R', 'helpers.R', 'server.R', 'ui.R', 'production_calendar.R',
+                 'report_utils.R', 'config.yml', 'version')
+  $demoFiles = @('demo/schema.sql', 'demo/Dockerfile', 'demo/docker-compose.yml')
+  $onlineFiles = @('demo/online/Dockerfile', 'demo/online/entrypoint.sh', 'demo/online/run_app.R')
+  $rules = @('**')
+  $rules += @($Allowed | Where-Object { $_ -in $rootFiles } | ForEach-Object { "!$_" })
+  $rules += @('!ui/', 'ui/**')
+  $rules += @($Allowed | Where-Object { $_ -match '^ui/[^/]+\.R$' } | ForEach-Object { "!$_" })
+  $rules += @('!www/', 'www/**')
+  $rules += @($Allowed | Where-Object { $_ -eq 'www/my_style.css' } | ForEach-Object { "!$_" })
+  $rules += @('!demo/', 'demo/**')
+  $rules += @($Allowed | Where-Object { $_ -match '^demo/[^/]+\.R$' -or $_ -in $demoFiles } | ForEach-Object { "!$_" })
+  $rules += @('!demo/online/', 'demo/online/**')
+  $rules += @($Allowed | Where-Object { $_ -in $onlineFiles } | ForEach-Object { "!$_" })
+  $rules
+}
+
 function Assert-PlainTree([string]$Directory) {
   if ((Get-Item -LiteralPath $Directory -Force).Attributes -band [IO.FileAttributes]::ReparsePoint) { throw 'Refusing a linked output root.' }
   $all = @((Get-Item -LiteralPath $Directory -Force)) + @(Get-ChildItem -LiteralPath $Directory -Recurse -Force)
@@ -78,8 +98,8 @@ try {
     Copy-Item -LiteralPath (Join-Path $repoRoot $relative) -Destination $target
   }
   [IO.File]::WriteAllText((Join-Path $staging '.gitignore'), ".Rproj.user/`n.Rhistory`n.RData`n.Ruserdata`nconfig.*.yml`nusers.local.csv`nrenv/library/`ndemo/.runtime/`ndist/`n", $utf8)
-  $dockerFiles = @('global.R','helpers.R','server.R','ui.R','production_calendar.R','report_utils.R','config.yml','version','ui/','ui/*.R','www/','www/my_style.css','demo/','demo/*.R','demo/schema.sql','demo/Dockerfile','demo/docker-compose.yml')
-  [IO.File]::WriteAllText((Join-Path $staging '.dockerignore'), "**`n" + (($dockerFiles | ForEach-Object { "!$_" }) -join "`n") + "`n", $utf8)
+  $dockerRules = @(Get-PublicDockerRules $allowed)
+  [IO.File]::WriteAllText((Join-Path $staging '.dockerignore'), ($dockerRules -join "`n") + "`n", $utf8)
   $entries = @(Get-ChildItem -LiteralPath $staging -Recurse -Force -File | Sort-Object FullName | ForEach-Object {
     [ordered]@{ path = $_.FullName.Substring($staging.Length + 1).Replace('\', '/'); bytes = $_.Length; sha256 = (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant() }
   })
